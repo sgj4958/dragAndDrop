@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 50px;
+            gap: 10px;
+        }
+
+        ul {
+            border: 1px solid #000;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        li {
+            width: 100px;
+            height: 30px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body id="body">
+    <ul class="container">
+        <li class="draggable" draggable="true">1</li>
+        <li class="draggable" draggable="true">2</li>
+        <li class="draggable" draggable="true">3</li>
+        <li class="draggable" draggable="true">4</li>
+        <li class="draggable" draggable="true">5</li>
+    </ul>
+    <ul class="container">
+        <li class="draggable" draggable="true">a</li>
+        <li class="draggable" draggable="true">b</li>
+        <li class="draggable" draggable="true">c</li>
+        <li class="draggable" draggable="true">d</li>
+        <li class="draggable" draggable="true">e</li>
+    </ul>
+</body>
+<script>
+    const dragAndDrop = (content, option) => {
+
+        const optionDefault = {
+            headerLabel: "",
+            oLabel: "확인",
+            xLabel: "취소",
+            showOButton: true,
+            showXButton: true,
+            showHeader: true,
+            backDropCloseEnable: true,
+            tansparentEnable: true,
+            insideDragEnable: true,
+            oEvent: () => {}
+        }
+        option = {
+            ...optionDefault,
+            ...option
+        }
+
+        const id = `customId_No${Math.floor(Math.random() * 10e5)}`
+        document.head.insertAdjacentHTML("beforeend", `<style>
+        </style>`)
+        document.body.insertAdjacentHTML("afterbegin", `
+        `)
+
+        const customWrap = document.querySelector("body")
+        const modalCustom = customWrap.querySelector(`#${id}`)
+
+
+        const li = document.querySelectorAll("li");
+        const ul = document.querySelectorAll("ul");
+
+        li.forEach(e => {
+            e.addEventListener("dragstart", () => e.classList.add("dragging"))
+            e.addEventListener("dragend", () => e.classList.remove("dragging"))
+        })
+
+        const getElement = (ul, y) => {
+            const eArray = [...ul.querySelectorAll("li:not(.dragging)")]
+            const yArray = eArray.map(e => e.getBoundingClientRect().y + e.getBoundingClientRect().height / 2)
+            for(const [index, item] of yArray.entries()) {
+                if(item > y) return eArray[index]
+            }
+            return false
+        }
+
+        ul.forEach(ul => {
+            ul.addEventListener("dragover", e => {
+                e.preventDefault()
+                const element = getElement(ul, e.y)
+                const now = document.querySelector(".dragging")
+                if (element === false) ul.appendChild(now)
+                else ul.insertBefore(now, element)
+            })
+        })
+
+        // function getElement(ul, y) {
+
+        //     const draggableElements = [
+        //         ...ul.querySelectorAll(".draggable:not(.dragging)"),
+        //     ];
+        //     return draggableElements.reduce(
+        //         (closest, child) => {
+        //         const box = child.getBoundingClientRect();
+        //         const offset = y - box.top - box.height / 2;
+        //         // console.log('offset', y, box.top, box.height, offset);
+        //         if (offset < 0 && offset > closest.offset) {
+        //             return { offset: offset, element: child };
+        //         } else {
+        //             return closest;
+        //         }
+        //         },
+        //         { offset: Number.NEGATIVE_INFINITY },
+        //     ).element;
+        // }
+    }
+
+    dragAndDrop()
+</script>
+</html>
