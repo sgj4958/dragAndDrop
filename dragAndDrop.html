@@ -70,6 +70,9 @@
             /* 50% {translate: 0 -7%;} */
             100% {translate: 0 -10%;}
         }
+
+        li.slide:not(.dragging) {animation: slide .15s;}
+        @keyframes slide {100% {translate: 0 100%;}}
     </style>
 </head>
 <body id="body">
@@ -93,7 +96,8 @@
 
         const optionDefault = {
             verticalDirection: true,
-            dropEvent: () => {}
+            dropEvent: () => {},
+            changeEvent: () => {},
         }
         option = {
             ...optionDefault,
@@ -128,7 +132,7 @@
         li.forEach(e => {
             e.addEventListener("dragstart", () => e.classList.add("dragging"))
             e.addEventListener("dragend", () => e.classList.remove("dragging"))
-            e.addEventListener("drop", () => option.dropEvent())
+            e.addEventListener("drop", e => option.dropEvent(e))
             // e.addEventListener("dragenter", () => {})
         })
 
@@ -137,12 +141,10 @@
             ul.addEventListener("dragover", e => {
                 e.preventDefault()
                 const element = getElement(ul, e)
-                // const ulRect = ul.getBoundingClientRect()
-                // const ulY = ulRect.top + ulRect.height / 2
-                // const element = document.elementFromPoint(e.x, e.y).closest("li") ?? (ulY > e.y ? ul.querySelector("li") : false)
                 
                 if(beforeElement == element) return
                 beforeElement = element
+                option.changeEvent(e)
                 const now = document.querySelector(".dragging")
 
                 if(element === false) ul.appendChild(now)
@@ -151,7 +153,6 @@
                 const setClass = (element, className, index) => {
                     element.classList.add(className)
                     element.style.animationDelay = index * 0.05 + "s"
-                    // const deleteDragAni = () => ul.querySelectorAll("." + className).forEach(element => element.classList.remove(className))
                     const deleteDragAni = () => {
                         element.classList.remove(className)
                         element.removeEventListener("transitionend", deleteDragAni)
@@ -163,11 +164,10 @@
                 let sibling = now.nextElementSibling
                 let siblingCount = 0
                 while(sibling) {
-                    // if(sibling != now)
                     setClass(sibling, "dragAni", siblingCount++)
                     sibling = sibling.nextElementSibling
                 }
-                sibling = now.previousElementSibling //|| ul.querySelector("li:last-child") 버그발생함.
+                sibling = now.previousElementSibling
                 siblingCount = 0
                 while(sibling) {
                     setClass(sibling, "dragAniTop", siblingCount++)
