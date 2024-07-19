@@ -25,8 +25,8 @@
             border: 1px solid #000;
             padding: 10px;
             display: flex;
-            /* flex-direction: column; */
-            flex-direction: row;
+            flex-direction: column;
+            /* flex-direction: row; */
             gap: 5px;
             transition: .3s;
             width: 200px;
@@ -432,6 +432,6 @@
         })
     }
 
-    dragAndDrop("ul.container", null, {verticalDirection: false})
+    dragAndDrop("ul.container", null, {verticalDirection: true})
 </script>
 </html>
