@@ -25,49 +25,35 @@
             border: 1px solid #000;
             padding: 10px;
             display: flex;
-            flex-direction: column;
+            /* flex-direction: column; */
+            flex-direction: row;
             gap: 5px;
             transition: .3s;
+            width: 200px;
         }
         li {
-            width: 200px;
+            width: 100%;
             height: 60px;
             border: 1px solid #ccc;
             display: flex;
             justify-content: center;
             align-items: center;
-
-            /* transition: .2s; */
-            /* transition: transform 100ms ease 0s; */
-            /* transform: translate3d(0px, 0px, 0px); */
         }
+
+
         li.dragging {
-            /* opacity: .9; */
             box-shadow: 0px 0px 1px 1px rgb(181, 234, 255);
             border: 1px solid rgb(216, 216, 255);
             background: rgb(239, 249, 255);
-            /* cursor: grabbing; */
         }
-        li.dragAni:not(.dragging) {
-            animation: dragAni .15s;
-            /* translate: 0 -30%;
-            transition: .1s; */
-            /* transition: .1s cubic-bezier(.5, -1.5, .5, 1.5); */
-        }
-        li.dragAniTop:not(.dragging) {
-            animation: dragAniTop .15s;
-            /* translate: 0 30%;
-            transition: .1s; */
-            /* transition: .1s cubic-bezier(.5, -1.5, .5, 1.5); */
-        }
-        @keyframes dragAni {
+        li.waterB:not(.dragging) {animation: waterB .15s;}
+        li.waterT:not(.dragging) {animation: waterT .15s;}
+        @keyframes waterB {
             0% {translate: 0 -30%;}
-            /* 50% {translate: 0 7%;} */
             100% {translate: 0 10%;}
         }
-        @keyframes dragAniTop {
+        @keyframes waterT {
             0% {translate: 0 30%;}
-            /* 50% {translate: 0 -7%;} */
             100% {translate: 0 -10%;}
         }
 
@@ -79,15 +65,26 @@
         @keyframes slideL {100% {translate: 100% 0;}}
         li.slideR {animation: slideR .2s;}
         @keyframes slideR {100% {translate: -100% 0;}}
+        
+        li.waterR:not(.dragging) {animation: waterR .15s;}
+        li.waterL:not(.dragging) {animation: waterL .15s;}
+        @keyframes waterR {
+            0% {translate: 30% 0;}
+            100% {translate: -10% 0;}
+        }
+        @keyframes waterL {
+            0% {translate: -30% 0;}
+            100% {translate: 10% 0;}
+        }
     </style>
 </head>
 <body id="body">
     <ul class="container" id="A">
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
+        <li><p>1</p></li>
+        <li><p>2</p></li>
+        <li><p>3</p></li>
+        <li><p>4</p></li>
+        <li><p>5</p></li>
     </ul>
     <ul class="container" id="B">
         <li>a</li>
@@ -96,9 +93,11 @@
         <li>d</li>
         <li>e</li>
     </ul>
+    <ul class="container" id="C"></ul>
 </body>
 <script>
     const dragAndDrop = (listWrap, list, option) => {
+        list ??= "& > *"
 
         const optionDefault = {
             verticalDirection: true,
@@ -111,17 +110,17 @@
             ...option
         }
 
-        const id = `customId_No${Math.floor(Math.random() * 10e5)}`
+        // const id = `customId_No${Math.floor(Math.random() * 10e5)}`
         document.head.insertAdjacentHTML("beforeend", `<style>
         </style>`)
         document.body.insertAdjacentHTML("afterbegin", `
         `)
 
-        const customWrap = document.querySelector("body")
-        const modalCustom = customWrap.querySelector(`#${id}`)
+        // const customWrap = document.querySelector("body")
+        // const modalCustom = customWrap.querySelector(`#${id}`)
 
         const listWrapArray = document.querySelectorAll(listWrap)
-        const listArray = document.querySelectorAll(listWrap + (list ?? " > *"))
+        // const listArray = document.querySelectorAll(listWrap + (list ?? " > *"))
 
         const getElement = (ul, cursor) => {
             const liArray = [...ul.querySelectorAll("li:not(.dragging)")]
@@ -136,97 +135,155 @@
         }
         
         // let beforeIndex
-
         // let beforeElement
-        listArray.forEach((li, i) => {
-            li.setAttribute("draggable", true)
-            li.addEventListener("dragstart", e => {
-                li.classList.add("dragging")
-                // ul.querySelectorAll(list).forEach((e, i) => {
-                //     if()
-                // })
-                // beforeIndex = i
-                // li.style.position = "fixed"
-                // li.style.top = e.y
-                // li.style.left = e.x
-                // beforeElement = li.nextElementSibling
-            })
-            li.addEventListener("dragend", e => {
-                li.classList.remove("dragging")
-                // li.style.position = "initial"
-            })
-            li.addEventListener("drop", e => option.dropEvent(e))
-            // e.addEventListener("dragenter", () => {})
-        })
+
+        // listArray.forEach((li, i) => {
+        //     li.setAttribute("draggable", true)
+        //     li.addEventListener("dragstart", e => {
+        //         li.classList.add("dragging")
+        //         // ul.querySelectorAll(list).forEach((e, i) => {
+        //         //     if()
+        //         // })
+        //         // beforeIndex = i
+        //         // li.style.position = "fixed"
+        //         // li.style.top = e.y
+        //         // li.style.left = e.x
+        //         // beforeElement = li.nextElementSibling
+        //     })
+        //     li.addEventListener("dragend", e => {
+        //         li.classList.remove("dragging")
+        //         // li.style.position = "initial"
+        //     })
+        //     li.addEventListener("drop", e => option.dropEvent(e))
+        //     li.addEventListener("dragenter", e => e.preventDefault())
+        // })
+
+        // const deleteRemainClass = ul => ul.querySelectorAll(list).forEach(li => li.classList.remove("slideB", "slideT"))
+        // const deleteRemainClass = li => li.classList.remove("slideB", "slideT")
 
         let swap = false
         listWrapArray.forEach(ul => {
+            ul.querySelectorAll(list).forEach(li => {
+                li.setAttribute("draggable", true)
+                li.addEventListener("dragstart", e => li.classList.add("dragging"))
+                li.addEventListener("dragend", e => li.classList.remove("dragging"))
+                li.addEventListener("drop", e => option.dropEvent(e))
+                // li.addEventListener("dragenter", e => e.preventDefault())
+            })
+
+            // ul.addEventListener("dragenter", e => e.preventDefault())
+            // ul.addEventListener("dragleave", e => e.preventDefault())
+
             ul.addEventListener("dragover", e => {
                 e.preventDefault()
                 const element = getElement(ul, e)
                 const now = document.querySelector(".dragging")
-
-                const prevE = element ? element.previousElementSibling : ul.querySelector((list ?? "&>*") + ":last-child")
-
+                const prevE = element ? element.previousElementSibling : ul.lastElementChild
+                
                 if(prevE == now) return
                 else if(swap) return
                 // const nextRect = element && element.getBoundingClientRect()
                 // const prevRect = (element ? element.previousElementSibling : ul.querySelector("&>*:last-child")).getBoundingClientRect()
                 // const direction = (element === false || (nextRect.y + nextRect.height / 2) > e.y) ? "F" : (e.y > (prevRect.y + prevRect.height / 2) ? "B" : false)
 
-
+                const waterDrop = () => {
+                    const setClass = (element, className, index) => {
+                        element.classList.add(className)
+                        element.style.animationDelay = index * 0.05 + "s"
+                        element.addEventListener("animationend", () => element.classList.remove(className) ?? (element.style.animationDelay = "0s"), {once: true})
+                    }
+                    let sibling = now.nextElementSibling
+                    let siblingCount = 0
+                    while(sibling) {
+                        setClass(sibling, option.verticalDirection ? "waterB" : "waterR", siblingCount++)
+                        sibling = sibling.nextElementSibling
+                    }
+                    sibling = now.previousElementSibling
+                    siblingCount = 0
+                    while(sibling) {
+                        setClass(sibling, option.verticalDirection ? "waterT" : "waterL", siblingCount++)
+                        sibling = sibling.previousElementSibling
+                    }
+                }
                 
                 const nowWrap = now.closest(listWrap)
                 const elementWrap = document.elementFromPoint(e.x, e.y).closest(listWrap)
-                // const elementWrap = element.closest(listWrap)
-                if(nowWrap != elementWrap) {
+                // // const elementWrap = element.closest(listWrap)
+                // const exchange = () => {
+                //     swap = true
+                //     // prevE.classList.remove("slideB", "slideT")
+                //     // element.classList.remove("slideB", "slideT")
                     
-                    const move = () => {
-                        // now.classList.remove("slideL", "slideR")
-                        now.style.transition = 0
-                        now.style.transform = "none"
-                        element === false ? elementWrap.appendChild(now) : element.before(now)
-                        option.changeEvent(e)
-                        // now.removeEventListener("animationend", move)
-                        // now.removeEventListener("transitionend", move)
-                        swap = false
-                    }
+                //     const move = () => {
+                //         // now.classList.remove("slideL", "slideR")
+                //         // now.classList.remove("slideB", "slideT")
+                //         // element.classList.remove("slideB", "slideT")
+                //         now.style.transition = "none"
+                //         now.style.transform = "none"
+                //         element === false ? elementWrap.appendChild(now) : element.before(now)
+                //         // elementWrap.appendChild(now)
+                //         option.changeEvent(e)
+                //         // now.removeEventListener("animationend", move)
+                //         // now.removeEventListener("transitionend", move)
+                //         swap = false
+                //     }
 
-                    const ghost = document.createElement(now.tagName)
-                    ghost.style.opacity = 0
-                    elementWrap.appendChild(ghost)
+                //     // const ghost = document.createElement(now.tagName)
+                //     // ghost.style.opacity = 0
+                //     // elementWrap.appendChild(ghost)
 
-                    // let nextWrapElement = element
-                    // while(nextWrapElement) {
-                    //     nextWrapElement.classList.add("slideB")
-                    //     // nextWrapElement.addEventListener("animationend", animationend)
-                    //     setTimeout(() => nextWrapElement.classList.remove("slideB"), 200)
-                    //     nextWrapElement = element.nextElementSibling
-                    // }
-                    let elementTrigger = false;
-                    [...elementWrap.querySelectorAll(list ?? "&>*")].forEach(e => {
-                        if(e == element) elementTrigger = true
-                        if(elementTrigger) e.classList.add("slideB") ?? setTimeout(() => e.classList.remove("slideB") ?? ghost.remove(), 200)   
-                    })
+                //     let nextWrapElement = element
+                //     let i = elementWrap.childElementCount //- [...elementWrap.childNodes].findIndex(li => li == element)
+                //     i = 0
+                //     while(i--) {
+                //         if(nextWrapElement) {
+                //             // nextWrapElement.classList.add("slideB")
+                //             // nextWrapElement.addEventListener("animationend", () => nextWrapElement.classList.remove("slideB"), {once: true})
+                //         }
+                //         // setTimeout(() => nextWrapElement.classList.remove("slideB"), 200)
+                //         nextWrapElement = element.nextElementSibling
+                //     }
+                //     // setTimeout(() => document.querySelectorAll(listWrap + ".slideB").forEach(e => e.classList.remove("slideB")), 200)
+                //     // let elementTrigger = false;
+                //     // [...elementWrap.querySelectorAll(list)].forEach(e => {
+                //     //     if(e == element) elementTrigger = true
+                //     //     if(elementTrigger) {
+                //     //         swap = true
+                //     //         e.classList.add("slideB")
+                //     //         setTimeout(() => {
+                //     //             e.classList.remove("slideB")
+                //     //             swap = false
+                //     //         }, 200)
+                //     //     }
+                //     // })
 
-                    swap = true
-                    // now.classList.add(nowWrap.getBoundingClientRect().x > elementWrap.getBoundingClientRect().x ? "slideR" : "slideL")
-                    now.style.transition = "0.2s"
-                    const elementRect = element ? element.getBoundingClientRect() : elementWrap
-                    const nowRect = now.getBoundingClientRect()
-                    now.style.transform = `translate(${elementRect.x - nowRect.x}px, ${elementRect.y - nowRect.y}px)`
-                    // now.addEventListener("animationend", move)
-                    // now.addEventListener("transitionend", move)
-                    setTimeout(move, 200)
+                //     // now.classList.add(nowWrap.getBoundingClientRect().x > elementWrap.getBoundingClientRect().x ? "slideR" : "slideL")
+
+                //     now.style.transition = "0.2s"
+                //     const elementRect = (element || elementWrap).getBoundingClientRect()
+                //     // const elementRect = elementWrap.getBoundingClientRect()
+                //     const getCenter = elementRect => ({
+                //         x: elementRect.x + elementRect.width / 2,
+                //         y: elementRect.y + elementRect.height / 2,
+                //     })
+                //     const nowRect = now.getBoundingClientRect()
+                //     now.style.transform = `translate(${elementRect.x - nowRect.x}px, ${elementRect.y - nowRect.y}px)`
+
+                //     // now.addEventListener("animationend", move)
+                //     // now.addEventListener("transitionend", move, {once: true})
+                //     setTimeout(move, 200)
+                //     // setTimeout(() => ghost.remove() ?? move(), 200)
+                // }
+                if(nowWrap != elementWrap) {
+                    // exchange()
+                    element === false ? elementWrap.appendChild(now) : element.before(now)
+                    waterDrop()
                 }
-
-
                 
                 const nowRect = now.getBoundingClientRect()
-                const nowY = nowRect.y + nowRect.height / 2
-                const direction = e.y > nowY
-                // const direction = nowY > e.y + now.getBoundingClientRect().height
-                if(now.getBoundingClientRect().height / 2 > Math.abs(nowY - e.y)) return
+                const nowPoint = option.verticalDirection ? nowRect.y + nowRect.height / 2 : nowRect.x + nowRect.width / 2
+                const direction = (option.verticalDirection ? e.y : e.x) > nowPoint
+                if(nowRect[option.verticalDirection ? "height" : "width"] / 2 > Math.abs(nowPoint - e[option.verticalDirection ? "y" : "x"])) return
 
                 
                 // if(beforeElement == element) return
@@ -263,6 +320,8 @@
                     //     e.style.translate = 0
                     // })
 
+                const slideB = option.verticalDirection ? "slideB" : "slideL"
+                const slideT = option.verticalDirection ? "slideT" : "slideR"
                 const slide = () => {
                     // now.nextElementSibling.style.transition = 0
                     // now.style.transition = 0
@@ -274,18 +333,50 @@
                     // now.nextElementSibling.classList.remove("slideB", "slideT")
                     // direction ? now.nextElementSibling.after(now) : now.previousElementSibling.before(now)
                     if(direction && now.nextElementSibling) {
-                        now.classList.remove("slideB")
-                        now.nextElementSibling.classList.remove("slideT")
+                        now.classList.remove(slideB)
+                        now.nextElementSibling.classList.remove(slideT)
                         now.nextElementSibling.after(now)
                     } else if(now.previousElementSibling) {
-                        now.classList.remove("slideT")
-                        now.previousElementSibling.classList.remove("slideB")
+                        now.classList.remove(slideT)
+                        now.previousElementSibling.classList.remove(slideB)
                         now.previousElementSibling.before(now)
                     }
                     option.changeEvent(e)
-                    now.removeEventListener("animationend", slide)
+                    // now.removeEventListener("animationend", slide)
+                    
                     swap = false
                 }
+                // const slideNow = direction => {
+                //     if(direction) {
+                //         now.classList.remove("slideB")
+                //         now.nextElementSibling.after(now)
+                //     } else {
+                //         now.classList.remove("slideT")
+                //         now.previousElementSibling.before(now)
+                //     }
+                //     option.changeEvent(e)
+                //     swap = false
+                // }
+                // const slidePrev = () => {
+                //         now.classList.remove("slideT")
+                //         now.previousElementSibling.classList.remove("slideB")
+                //         now.previousElementSibling.before(now)
+                // }
+                // const slideNext = () => {
+                //     if(direction && now.nextElementSibling) {
+                //         now.classList.remove("slideB")
+                //         now.nextElementSibling.classList.remove("slideT")
+                //         now.nextElementSibling.after(now)
+                //     } else if(now.previousElementSibling) {
+                //         now.classList.remove("slideT")
+                //         now.previousElementSibling.classList.remove("slideB")
+                //         now.previousElementSibling.before(now)
+                //     }
+                //     option.changeEvent(e)
+                //     // now.removeEventListener("animationend", slide)
+                    
+                //     swap = false
+                // }
                 swap = true
                 if(direction && now.nextElementSibling) {
                     // element.after(now)
@@ -297,17 +388,20 @@
                     // now.style.transition = ".2s"
                     // now.nextElementSibling.style.translate = "0 -100%"
                     // now.style.translate = "0 100%"
-                    now.nextElementSibling.classList.add("slideT")
-                    now.classList.add("slideB")
+                    now.nextElementSibling.classList.add(slideT)
+                    // now.nextElementSibling.addEventListener("animationend", () => now.nextElementSibling.classList.remove("slideT"), {once: true})
+                    now.classList.add(slideB)
+                    // now.addEventListener("animationend", () => slideNow(direction), {once: true})
 
                     // transitionend
                 } else if(now.previousElementSibling) {
                     // element.previousElementSibling && (element.previousElementSibling.style.translate = "0 100%")
-                    now.previousElementSibling.classList.add("slideB")
-                    now.classList.add("slideT")
+                    now.previousElementSibling.classList.add(slideB)
+                    // now.previousElementSibling.addEventListener("animationend", () => now.previousElementSibling.classList.remove("slideB"), {once: true})
+                    now.classList.add(slideT)
+                    // now.addEventListener("animationend", () => slideNow(direction), {once: true})
                 }
-                // now.addEventListener("animationend", slide)
-                setTimeout(slide, 200)
+                now.addEventListener("animationend", slide, {once: true})
 
                 // beforeIndex = nowIndex
 
@@ -338,6 +432,6 @@
         })
     }
 
-    dragAndDrop("ul.container")
+    dragAndDrop("ul.container", null, {verticalDirection: false})
 </script>
 </html>
